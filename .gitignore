@@ -1,0 +1,26 @@
+# 忽略 Python 编译文件
+__pycache__/
+*.pyc
+
+# 忽略虚拟环境
+venv/
+env/
+.venv/
+
+# [重要] 忽略数据库文件
+*.db
+vault_server.db
+
+# [重要] 忽略密钥文件
+*.key
+server_secret.key
+
+# [重要] 忽略环境变量配置文件
+.env
+
+# 忽略日志
+*.log
+server.log
+
+# 忽略系统文件
+.DS_Store
