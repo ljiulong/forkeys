@@ -552,7 +552,7 @@
     <script>
         // ===== 配置 =====
         const API_BASE_URL = '';
-        const KEYS = { DATA: 'vault_data_v3', VERIFIER: 'vault_verifier_v3', RECOVERY: 'vault_recovery_v3', QUESTION: 'vault_question_v3', EMAIL: 'vault_email_v3', CREATED: 'vault_created_at', THEME: 'vault_theme', LANG: 'vault_lang' };
+        const KEYS = { DATA: 'vault_data_v3', DATA_BACKUP: 'vault_data_backup_v1', VERIFIER: 'vault_verifier_v3', RECOVERY: 'vault_recovery_v3', QUESTION: 'vault_question_v3', EMAIL: 'vault_email_v3', CREATED: 'vault_created_at', THEME: 'vault_theme', LANG: 'vault_lang' };
 
         // ===== 状态 =====
         let currentLang = localStorage.getItem(KEYS.LANG) || 'zh';
@@ -611,6 +611,7 @@
             localStorage.setItem(KEYS.VERIFIER, CryptoJS.AES.encrypt("VERIFIED_OK", p1).toString());
             localStorage.setItem(KEYS.CREATED, Date.now().toString());
             localStorage.setItem(KEYS.DATA, '');
+            localStorage.setItem(KEYS.DATA_BACKUP, '');
             masterKey = p1; hide($('setupScreen')); enterApp(); showToast(t('dataSaved'));
         }
 
@@ -635,8 +636,28 @@
 
         function lockVault() { masterKey = ''; vaultData = []; ['appScreen', 'settingsModal', 'itemModal', 'viewModal', 'helpModal'].forEach(id => hide($(id))); hide($('topBar')); show($('loginScreen')); $('masterPassword').value = ''; }
         function enterApp() { show($('topBar')); show($('appScreen')); renderItems(); }
-        function loadData() { const enc = localStorage.getItem(KEYS.DATA); if (enc) try { vaultData = JSON.parse(CryptoJS.AES.decrypt(enc, masterKey).toString(CryptoJS.enc.Utf8)) || []; } catch { vaultData = []; } }
-        function saveVault() { if (!masterKey) return lockVault(); localStorage.setItem(KEYS.DATA, CryptoJS.AES.encrypt(JSON.stringify(vaultData), masterKey).toString()); }
+        function decryptVaultBlob(blob) { try { const plain = CryptoJS.AES.decrypt(blob, masterKey).toString(CryptoJS.enc.Utf8); if (!plain) return null; const parsed = JSON.parse(plain); return Array.isArray(parsed) ? parsed : []; } catch { return null; } }
+        function loadData() {
+            const primary = localStorage.getItem(KEYS.DATA);
+            const fallback = localStorage.getItem(KEYS.DATA_BACKUP);
+            const parsed = primary ? decryptVaultBlob(primary) : null;
+            if (parsed) { vaultData = parsed; return; }
+            const recovered = fallback ? decryptVaultBlob(fallback) : null;
+            if (recovered) { vaultData = recovered; localStorage.setItem(KEYS.DATA, fallback); console.warn('Recovered vault data from backup copy'); return; }
+            vaultData = [];
+        }
+        function saveVault() {
+            if (!masterKey) return lockVault();
+            try {
+                const encrypted = CryptoJS.AES.encrypt(JSON.stringify(vaultData), masterKey).toString();
+                const existing = localStorage.getItem(KEYS.DATA);
+                if (existing) localStorage.setItem(KEYS.DATA_BACKUP, existing);
+                localStorage.setItem(KEYS.DATA, encrypted);
+            } catch (err) {
+                console.error('Failed to persist vault data', err);
+                showToast(t('serverError'), true);
+            }
+        }
 
         // ===== 列表 =====
         const catIcons = { social: 'fa-users', email: 'fa-envelope', finance: 'fa-coins', shopping: 'fa-shopping-cart', work: 'fa-briefcase', server: 'fa-server', other: 'fa-folder' };
