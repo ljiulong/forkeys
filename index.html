@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -17,101 +18,419 @@
     <script src="i18n.js"></script>
     <style>
         :root {
-            --bg-body: #f8fafc; --bg-panel: rgba(255,255,255,0.98); --bg-input: #f1f5f9;
-            --bg-item: #ffffff; --bg-item-hover: #f0f9ff; --text-primary: #0f172a;
-            --text-accent: #0284c7; --text-secondary: #64748b; --text-muted: #94a3b8;
-            --border-main: #e2e8f0; --border-highlight: #0284c7; --border-item-l: #cbd5e1;
-            --btn-bg: #ffffff; --btn-hover-bg: #0284c7; --btn-hover-text: #ffffff;
-            --shadow-panel: 0 4px 20px rgba(0,0,0,0.08);
-            --badge-green-bg: #ecfdf5; --badge-green-text: #059669;
-            --badge-blue-bg: #eff6ff; --badge-blue-text: #2563eb;
+            --bg-body: #f8fafc;
+            --bg-panel: rgba(255, 255, 255, 0.98);
+            --bg-input: #f1f5f9;
+            --bg-item: #ffffff;
+            --bg-item-hover: #f0f9ff;
+            --text-primary: #0f172a;
+            --text-accent: #0284c7;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-main: #e2e8f0;
+            --border-highlight: #0284c7;
+            --border-item-l: #cbd5e1;
+            --btn-bg: #ffffff;
+            --btn-hover-bg: #0284c7;
+            --btn-hover-text: #ffffff;
+            --shadow-panel: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --badge-green-bg: #ecfdf5;
+            --badge-green-text: #059669;
+            --badge-blue-bg: #eff6ff;
+            --badge-blue-text: #2563eb;
         }
+
         body.dark-mode {
-            --bg-body: #0f172a; --bg-panel: rgba(30,41,59,0.98); --bg-input: #1e293b;
-            --bg-item: #1e293b; --bg-item-hover: #334155; --text-primary: #f1f5f9;
-            --text-accent: #38bdf8; --text-secondary: #94a3b8; --text-muted: #64748b;
-            --border-main: #334155; --border-highlight: #38bdf8; --border-item-l: #475569;
-            --btn-bg: #1e293b; --btn-hover-bg: #38bdf8; --btn-hover-text: #0f172a;
-            --shadow-panel: 0 4px 20px rgba(0,0,0,0.3);
-            --badge-green-bg: rgba(6,78,59,0.5); --badge-green-text: #4ade80;
-            --badge-blue-bg: rgba(30,58,138,0.5); --badge-blue-text: #60a5fa;
+            --bg-body: #0f172a;
+            --bg-panel: rgba(30, 41, 59, 0.98);
+            --bg-input: #1e293b;
+            --bg-item: #1e293b;
+            --bg-item-hover: #334155;
+            --text-primary: #f1f5f9;
+            --text-accent: #38bdf8;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-main: #334155;
+            --border-highlight: #38bdf8;
+            --border-item-l: #475569;
+            --btn-bg: #1e293b;
+            --btn-hover-bg: #38bdf8;
+            --btn-hover-text: #0f172a;
+            --shadow-panel: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --badge-green-bg: rgba(6, 78, 59, 0.5);
+            --badge-green-text: #4ade80;
+            --badge-blue-bg: rgba(30, 58, 138, 0.5);
+            --badge-blue-text: #60a5fa;
         }
-        * { box-sizing: border-box; }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-body); color: var(--text-primary);
-            min-height: 100dvh; margin: 0; padding: 0;
-            padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);
-            transition: background 0.3s, color 0.3s; -webkit-tap-highlight-color: transparent;
+            background: var(--bg-body);
+            color: var(--text-primary);
+            min-height: 100dvh;
+            margin: 0;
+            padding: 0;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            transition: background 0.3s, color 0.3s;
+            -webkit-tap-highlight-color: transparent;
         }
-        .vault-panel { background: var(--bg-panel); border: 1px solid var(--border-main); border-radius: 16px; box-shadow: var(--shadow-panel); }
-        .vault-input { background: var(--bg-input); border: 1px solid var(--border-main); border-radius: 12px; color: var(--text-primary); font-size: 16px; padding: 12px 16px; width: 100%; transition: border-color 0.2s, box-shadow 0.2s; }
-        .vault-input:focus { outline: none; border-color: var(--border-highlight); box-shadow: 0 0 0 3px rgba(2,132,199,0.1); }
-        .vault-input::placeholder { color: var(--text-muted); }
-        .vault-btn { background: var(--btn-bg); border: 1px solid var(--border-main); border-radius: 12px; color: var(--text-primary); font-weight: 600; padding: 14px 24px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .vault-btn:hover { background: var(--btn-hover-bg); color: var(--btn-hover-text); border-color: var(--border-highlight); }
-        .vault-btn:active { transform: scale(0.98); }
-        .vault-btn.primary { background: var(--border-highlight); color: white; border-color: var(--border-highlight); }
-        .vault-btn.primary:hover { filter: brightness(1.1); }
-        .vault-item { background: var(--bg-item); border: 1px solid var(--border-main); border-left: 4px solid var(--border-item-l); border-radius: 12px; padding: 16px; cursor: pointer; transition: all 0.2s; }
-        .vault-item:hover { background: var(--bg-item-hover); border-left-color: var(--border-highlight); transform: translateX(4px); }
-        .vault-item.hidden-item { opacity: 0.6; border-left-style: dashed; }
-        .icon-btn { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--border-main); background: var(--bg-input); color: var(--text-secondary); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
-        .icon-btn:hover { color: var(--text-accent); border-color: var(--border-highlight); }
-        .badge { font-size: 10px; padding: 4px 8px; border-radius: 6px; font-weight: 600; }
-        .badge-green { background: var(--badge-green-bg); color: var(--badge-green-text); }
-        .badge-blue { background: var(--badge-blue-bg); color: var(--badge-blue-text); }
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); z-index: 50; display: flex; align-items: center; justify-content: center; padding: 16px; }
-        .scroll-area { overflow-y: auto; -webkit-overflow-scrolling: touch; }
-        .scroll-area::-webkit-scrollbar { width: 6px; }
-        .scroll-area::-webkit-scrollbar-thumb { background: var(--border-main); border-radius: 3px; }
-        .fab { position: fixed; bottom: calc(24px + env(safe-area-inset-bottom)); right: 24px; width: 56px; height: 56px; border-radius: 16px; background: var(--border-highlight); color: white; border: none; font-size: 24px; cursor: pointer; box-shadow: 0 4px 12px rgba(2,132,199,0.3); transition: transform 0.2s; z-index: 40; }
-        .fab:hover { transform: scale(1.05); }
-        .fab:active { transform: scale(0.95); }
-        .tip-box { background: var(--bg-input); border-left: 3px solid var(--border-highlight); padding: 12px; border-radius: 0 8px 8px 0; }
-        .tip-box p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin: 0; white-space: pre-line; }
-        .hidden { display: none !important; }
-        
+
+        .vault-panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-main);
+            border-radius: 16px;
+            box-shadow: var(--shadow-panel);
+        }
+
+        .vault-input {
+            background: var(--bg-input);
+            border: 1px solid var(--border-main);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 16px;
+            padding: 12px 16px;
+            width: 100%;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .vault-input:focus {
+            outline: none;
+            border-color: var(--border-highlight);
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
+        }
+
+        .vault-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .vault-btn {
+            background: var(--btn-bg);
+            border: 1px solid var(--border-main);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-weight: 600;
+            padding: 14px 24px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .vault-btn:hover {
+            background: var(--btn-hover-bg);
+            color: var(--btn-hover-text);
+            border-color: var(--border-highlight);
+        }
+
+        .vault-btn:active {
+            transform: scale(0.98);
+        }
+
+        .vault-btn.primary {
+            background: var(--border-highlight);
+            color: white;
+            border-color: var(--border-highlight);
+        }
+
+        .vault-btn.primary:hover {
+            filter: brightness(1.1);
+        }
+
+        .vault-item {
+            background: var(--bg-item);
+            border: 1px solid var(--border-main);
+            border-left: 4px solid var(--border-item-l);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .vault-item:hover {
+            background: var(--bg-item-hover);
+            border-left-color: var(--border-highlight);
+            transform: translateX(4px);
+        }
+
+        .vault-item.hidden-item {
+            opacity: 0.6;
+            border-left-style: dashed;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid var(--border-main);
+            background: var(--bg-input);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .icon-btn:hover {
+            color: var(--text-accent);
+            border-color: var(--border-highlight);
+        }
+
+        .badge {
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .badge-green {
+            background: var(--badge-green-bg);
+            color: var(--badge-green-text);
+        }
+
+        .badge-blue {
+            background: var(--badge-blue-bg);
+            color: var(--badge-blue-text);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .scroll-area {
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .scroll-area::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .scroll-area::-webkit-scrollbar-thumb {
+            background: var(--border-main);
+            border-radius: 3px;
+        }
+
+        .fab {
+            position: fixed;
+            bottom: calc(24px + env(safe-area-inset-bottom));
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            background: var(--border-highlight);
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+            transition: transform 0.2s;
+            z-index: 40;
+        }
+
+        .fab:hover {
+            transform: scale(1.05);
+        }
+
+        .fab:active {
+            transform: scale(0.95);
+        }
+
+        .tip-box {
+            background: var(--bg-input);
+            border-left: 3px solid var(--border-highlight);
+            padding: 12px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .tip-box p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
+            white-space: pre-line;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
         /* 科技风格 Logo */
-        .tech-logo { width: 72px; height: 72px; position: relative; display: flex; align-items: center; justify-content: center; }
-        .tech-logo-sm { width: 56px; height: 56px; }
-        .tech-logo-xs { width: 24px; height: 24px; }
-        .logo-ring { fill: none; stroke: var(--text-accent); stroke-width: 2; }
-        .logo-shield { fill: var(--text-accent); }
-        .logo-key { fill: var(--bg-panel); }
-        .logo-circuit { stroke: var(--text-accent); stroke-width: 1; fill: none; opacity: 0.5; }
-        
+        .tech-logo {
+            width: 72px;
+            height: 72px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tech-logo-sm {
+            width: 56px;
+            height: 56px;
+        }
+
+        .tech-logo-xs {
+            width: 24px;
+            height: 24px;
+        }
+
+        .logo-ring {
+            fill: none;
+            stroke: var(--text-accent);
+            stroke-width: 2;
+        }
+
+        .logo-shield {
+            fill: var(--text-accent);
+        }
+
+        .logo-key {
+            fill: var(--bg-panel);
+        }
+
+        .logo-circuit {
+            stroke: var(--text-accent);
+            stroke-width: 1;
+            fill: none;
+            opacity: 0.5;
+        }
+
         /* 折叠面板 */
-        .accordion { border: 1px solid var(--border-main); border-radius: 12px; overflow: hidden; }
-        .accordion-item { border-bottom: 1px solid var(--border-main); }
-        .accordion-item:last-child { border-bottom: none; }
-        .accordion-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; cursor: pointer; background: var(--bg-input); transition: background 0.2s; }
-        .accordion-header:hover { background: var(--bg-item-hover); }
-        .accordion-header h4 { margin: 0; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
-        .accordion-icon { transition: transform 0.3s; color: var(--text-muted); }
-        .accordion-item.open .accordion-icon { transform: rotate(180deg); }
-        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
-        .accordion-item.open .accordion-content { max-height: 1000px; }
-        .accordion-body { padding: 16px; }
-        
+        .accordion {
+            border: 1px solid var(--border-main);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .accordion-item {
+            border-bottom: 1px solid var(--border-main);
+        }
+
+        .accordion-item:last-child {
+            border-bottom: none;
+        }
+
+        .accordion-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            cursor: pointer;
+            background: var(--bg-input);
+            transition: background 0.2s;
+        }
+
+        .accordion-header:hover {
+            background: var(--bg-item-hover);
+        }
+
+        .accordion-header h4 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .accordion-icon {
+            transition: transform 0.3s;
+            color: var(--text-muted);
+        }
+
+        .accordion-item.open .accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .accordion-item.open .accordion-content {
+            max-height: 1000px;
+        }
+
+        .accordion-body {
+            padding: 16px;
+        }
+
         /* 动画 */
-        @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } }
-        @keyframes glow { 0%, 100% { filter: drop-shadow(0 0 2px var(--text-accent)); } 50% { filter: drop-shadow(0 0 8px var(--text-accent)); } }
-        .spin { animation: spin 0.6s ease-in-out; }
-        .pulse { animation: pulse 2s ease-in-out infinite; }
-        .glow { animation: glow 2s ease-in-out infinite; }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes glow {
+
+            0%,
+            100% {
+                filter: drop-shadow(0 0 2px var(--text-accent));
+            }
+
+            50% {
+                filter: drop-shadow(0 0 8px var(--text-accent));
+            }
+        }
+
+        .spin {
+            animation: spin 0.6s ease-in-out;
+        }
+
+        .pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .glow {
+            animation: glow 2s ease-in-out infinite;
+        }
     </style>
 </head>
+
 <body>
     <!-- 顶部栏 -->
     <header id="topBar" class="fixed top-0 left-0 right-0 z-30 hidden" style="padding-top: env(safe-area-inset-top);">
-        <div class="flex items-center justify-between px-4 py-3 bg-[var(--bg-body)] border-b border-[var(--border-main)]">
+        <div
+            class="flex items-center justify-between px-4 py-3 bg-[var(--bg-body)] border-b border-[var(--border-main)]">
             <div class="flex items-center gap-2">
                 <svg class="tech-logo-xs" viewBox="0 0 24 24">
-                    <path d="M12 2L4 6v6c0 5.5 3.4 10.6 8 12 4.6-1.4 8-6.5 8-12V6l-8-4z" class="logo-shield"/>
-                    <circle cx="12" cy="10" r="2.5" class="logo-key"/>
-                    <rect x="11" y="11.5" width="2" height="5" rx="0.5" class="logo-key"/>
+                    <path d="M12 2L4 6v6c0 5.5 3.4 10.6 8 12 4.6-1.4 8-6.5 8-12V6l-8-4z" class="logo-shield" />
+                    <circle cx="12" cy="10" r="2.5" class="logo-key" />
+                    <rect x="11" y="11.5" width="2" height="5" rx="0.5" class="logo-key" />
                 </svg>
                 <span class="font-bold text-sm" data-i18n="appName">Forkeys</span>
             </div>
@@ -120,7 +439,8 @@
                 <button onclick="toggleTheme()" class="icon-btn" title="主题"><i class="fas fa-adjust"></i></button>
                 <button onclick="toggleLang()" class="icon-btn text-xs font-bold" id="langBtn">CN</button>
                 <button onclick="openSettings()" class="icon-btn" title="设置"><i class="fas fa-cog"></i></button>
-                <button onclick="lockVault()" class="icon-btn text-red-500" title="锁定"><i class="fas fa-lock"></i></button>
+                <button onclick="lockVault()" class="icon-btn text-red-500" title="锁定"><i
+                        class="fas fa-lock"></i></button>
             </div>
         </div>
     </header>
@@ -133,14 +453,15 @@
                 <div class="tech-logo tech-logo-sm mx-auto mb-4">
                     <svg viewBox="0 0 56 56" class="w-full h-full">
                         <!-- 外圈 -->
-                        <circle cx="28" cy="28" r="26" class="logo-ring" stroke-dasharray="4 2"/>
+                        <circle cx="28" cy="28" r="26" class="logo-ring" stroke-dasharray="4 2" />
                         <!-- 盾牌 -->
-                        <path d="M28 8L14 14v12c0 9.4 5.8 18.2 14 20 8.2-1.8 14-10.6 14-20V14L28 8z" class="logo-shield"/>
+                        <path d="M28 8L14 14v12c0 9.4 5.8 18.2 14 20 8.2-1.8 14-10.6 14-20V14L28 8z"
+                            class="logo-shield" />
                         <!-- 钥匙孔 -->
-                        <circle cx="28" cy="24" r="5" class="logo-key"/>
-                        <rect x="25.5" y="27" width="5" height="12" rx="1.5" class="logo-key"/>
+                        <circle cx="28" cy="24" r="5" class="logo-key" />
+                        <rect x="25.5" y="27" width="5" height="12" rx="1.5" class="logo-key" />
                         <!-- 电路线 -->
-                        <path d="M14 28H8M42 28h6M28 44v6M28 8V2" class="logo-circuit"/>
+                        <path d="M14 28H8M42 28h6M28 44v6M28 8V2" class="logo-circuit" />
                     </svg>
                 </div>
                 <h1 class="text-xl font-bold" data-i18n="appName">Forkeys</h1>
@@ -148,14 +469,21 @@
             </div>
             <div class="space-y-4">
                 <div class="flex justify-end gap-2 mb-2">
-                    <button onclick="openHelp()" class="icon-btn text-sm" title="帮助"><i class="fas fa-question-circle"></i></button>
-                    <button onclick="toggleTheme()" class="icon-btn text-sm" title="主题"><i class="fas fa-adjust"></i></button>
+                    <button onclick="openHelp()" class="icon-btn text-sm" title="帮助"><i
+                            class="fas fa-question-circle"></i></button>
+                    <button onclick="toggleTheme()" class="icon-btn text-sm" title="主题"><i
+                            class="fas fa-adjust"></i></button>
                     <button onclick="toggleLang()" class="icon-btn text-xs font-bold" id="setupLangBtn">CN</button>
                 </div>
-                <div class="tip-box"><p data-i18n="setupTip">请设置一个强密码，建议包含大小写字母、数字和特殊字符</p></div>
-                <input type="password" id="setupPass" class="vault-input" data-i18n-placeholder="setMasterPass" placeholder="输入主密码">
-                <input type="password" id="setupPassConfirm" class="vault-input" data-i18n-placeholder="confirmPass" placeholder="确认主密码">
-                <button onclick="createVault()" class="vault-btn primary w-full" data-i18n="executeSetup"><i class="fas fa-check"></i> 创建金库</button>
+                <div class="tip-box">
+                    <p data-i18n="setupTip">请设置一个强密码，建议包含大小写字母、数字和特殊字符</p>
+                </div>
+                <input type="password" id="setupPass" class="vault-input" data-i18n-placeholder="setMasterPass"
+                    placeholder="输入主密码">
+                <input type="password" id="setupPassConfirm" class="vault-input" data-i18n-placeholder="confirmPass"
+                    placeholder="确认主密码">
+                <button onclick="createVault()" class="vault-btn primary w-full" data-i18n="executeSetup"><i
+                        class="fas fa-check"></i> 创建金库</button>
             </div>
         </div>
     </div>
@@ -167,15 +495,15 @@
             <div class="tech-logo mx-auto mb-6" id="vaultLock">
                 <svg viewBox="0 0 72 72" class="w-full h-full">
                     <!-- 外圈动画 -->
-                    <circle cx="36" cy="36" r="34" class="logo-ring" stroke-dasharray="6 3" id="outerRing"/>
-                    <circle cx="36" cy="36" r="28" class="logo-ring" stroke-dasharray="4 2" opacity="0.5"/>
+                    <circle cx="36" cy="36" r="34" class="logo-ring" stroke-dasharray="6 3" id="outerRing" />
+                    <circle cx="36" cy="36" r="28" class="logo-ring" stroke-dasharray="4 2" opacity="0.5" />
                     <!-- 盾牌 -->
-                    <path d="M36 10L18 18v16c0 12 7.2 23.2 18 26 10.8-2.8 18-14 18-26V18L36 10z" class="logo-shield"/>
+                    <path d="M36 10L18 18v16c0 12 7.2 23.2 18 26 10.8-2.8 18-14 18-26V18L36 10z" class="logo-shield" />
                     <!-- 钥匙孔 -->
-                    <circle cx="36" cy="30" r="6" class="logo-key"/>
-                    <rect x="33" y="34" width="6" height="14" rx="2" class="logo-key"/>
+                    <circle cx="36" cy="30" r="6" class="logo-key" />
+                    <rect x="33" y="34" width="6" height="14" rx="2" class="logo-key" />
                     <!-- 电路装饰 -->
-                    <circle cx="36" cy="36" r="22" class="logo-circuit" stroke-dasharray="2 4"/>
+                    <circle cx="36" cy="36" r="22" class="logo-circuit" stroke-dasharray="2 4" />
                 </svg>
             </div>
             <h1 class="text-xl font-bold mb-1" data-i18n="appName">Forkeys</h1>
@@ -186,24 +514,75 @@
                 <button onclick="toggleLang()" class="icon-btn text-xs font-bold" id="loginLangBtn">CN</button>
             </div>
             <div class="relative mb-4">
-                <input type="password" id="masterPassword" class="vault-input pr-12 text-center" data-i18n-placeholder="enterPasscode" placeholder="输入密码">
-                <button onclick="togglePwdVisibility('masterPassword')" class="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--text-primary)]">
+                <input type="password" id="masterPassword" class="vault-input pr-12 text-center"
+                    data-i18n-placeholder="enterPasscode" placeholder="输入密码">
+                <button onclick="togglePwdVisibility('masterPassword')"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--text-primary)]">
                     <i class="fas fa-eye"></i>
                 </button>
             </div>
-            <button onclick="unlockVault()" class="vault-btn primary w-full mb-4" data-i18n="unlockTerminal"><i class="fas fa-unlock"></i> 解锁金库</button>
-            <p id="loginMsg" class="text-red-500 text-sm opacity-0 transition-opacity mb-2" data-i18n="accessDenied">密码错误</p>
-            <button onclick="showRecovery()" class="text-sm text-[var(--text-secondary)] hover:text-[var(--text-accent)]" data-i18n="forgotPass">忘记密码？</button>
+            <button onclick="unlockVault()" class="vault-btn primary w-full mb-4" data-i18n="unlockTerminal"><i
+                    class="fas fa-unlock"></i> 解锁金库</button>
+            <p id="loginMsg" class="text-red-500 text-sm opacity-0 transition-opacity mb-2" data-i18n="accessDenied">
+                密码错误</p>
+            <button onclick="showRecovery()"
+                class="text-sm text-[var(--text-secondary)] hover:text-[var(--text-accent)]"
+                data-i18n="forgotPass">忘记密码？</button>
+        </div>
+    </div>
+
+    <!-- 强制安全设置页面 -->
+    <div id="mandatorySetupScreen" class="hidden min-h-screen flex items-center justify-center p-4">
+        <div class="vault-panel p-6 w-full max-w-md">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-[var(--bg-input)] flex items-center justify-center">
+                    <i class="fas fa-shield-alt text-2xl text-[var(--text-accent)]"></i>
+                </div>
+                <h1 class="text-xl font-bold" data-i18n="mandatorySetupTitle">安全设置</h1>
+                <p class="text-sm text-[var(--text-secondary)] mt-2" data-i18n="mandatorySetupDesc">为保障数据安全，请设置恢复选项。</p>
+            </div>
+
+            <div class="space-y-4">
+                <!-- 安全问题 -->
+                <div class="vault-input bg-[var(--bg-item)] p-4 border-l-4 border-[var(--badge-green-text)]">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="badge badge-green">1</span>
+                        <span class="font-semibold" data-i18n="localRecovery">本地恢复</span>
+                        <span class="badge badge-green" data-i18n="offlineTag">离线</span>
+                    </div>
+                    <input type="text" id="mandatoryQuestion" class="vault-input mb-2"
+                        data-i18n-placeholder="secQuestionPlaceholder" placeholder="安全问题">
+                    <input type="text" id="mandatoryAnswer" class="vault-input"
+                        data-i18n-placeholder="answerPlaceholder" placeholder="答案">
+                </div>
+
+                <!-- 恢复邮箱 -->
+                <div class="vault-input bg-[var(--bg-item)] p-4 border-l-4 border-[var(--badge-blue-text)]">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="badge badge-blue">2</span>
+                        <span class="font-semibold" data-i18n="serverRecovery">服务器恢复</span>
+                        <span class="badge badge-blue" data-i18n="onlineTag">在线</span>
+                    </div>
+                    <input type="email" id="mandatoryEmail" class="vault-input" data-i18n-placeholder="emailPlaceholder"
+                        placeholder="恢复邮箱">
+                </div>
+
+                <button onclick="completeMandatorySetup()" class="vault-btn primary w-full" data-i18n="completeSetup">
+                    <i class="fas fa-check"></i> 完成设置
+                </button>
+            </div>
         </div>
     </div>
 
     <!-- 主界面 -->
     <div id="appScreen" class="hidden" style="padding-top: calc(60px + env(safe-area-inset-top));">
-        <div class="sticky top-0 z-20 bg-[var(--bg-body)] px-4 py-3 border-b border-[var(--border-main)]" style="top: calc(52px + env(safe-area-inset-top));">
+        <div class="sticky top-0 z-20 bg-[var(--bg-body)] px-4 py-3 border-b border-[var(--border-main)]"
+            style="top: calc(52px + env(safe-area-inset-top));">
             <div class="flex gap-2 mb-3">
                 <div class="flex-1 relative">
                     <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]"></i>
-                    <input type="text" id="searchInput" oninput="renderItems()" class="vault-input pl-10" data-i18n-placeholder="searchPlaceholder" placeholder="搜索...">
+                    <input type="text" id="searchInput" oninput="renderItems()" class="vault-input pl-10"
+                        data-i18n-placeholder="searchPlaceholder" placeholder="搜索...">
                 </div>
                 <button id="toggleHiddenBtn" onclick="toggleShowHidden()" class="icon-btn" title="显示隐藏项">
                     <i class="fas fa-eye-slash" id="toggleHiddenIcon"></i>
@@ -227,7 +606,8 @@
                 </select>
             </div>
         </div>
-        <div id="itemList" class="p-4 space-y-3 scroll-area" style="max-height: calc(100dvh - 180px - env(safe-area-inset-top) - env(safe-area-inset-bottom));"></div>
+        <div id="itemList" class="p-4 space-y-3 scroll-area"
+            style="max-height: calc(100dvh - 180px - env(safe-area-inset-top) - env(safe-area-inset-bottom));"></div>
         <div id="emptyState" class="hidden flex-col items-center justify-center py-20 text-[var(--text-muted)]">
             <i class="fas fa-box-open text-4xl mb-3"></i>
             <p data-i18n="emptyDb">暂无数据</p>
@@ -246,17 +626,25 @@
             <div class="space-y-4">
                 <div>
                     <label class="text-xs text-[var(--text-secondary)] mb-1 block" data-i18n="targetLabel">平台</label>
-                    <div class="flex gap-2"><div id="viewTitle" class="vault-input flex-1 bg-[var(--bg-item)]"></div><button onclick="copyField('viewTitle')" class="icon-btn"><i class="fas fa-copy"></i></button></div>
+                    <div class="flex gap-2">
+                        <div id="viewTitle" class="vault-input flex-1 bg-[var(--bg-item)]"></div><button
+                            onclick="copyField('viewTitle')" class="icon-btn"><i class="fas fa-copy"></i></button>
+                    </div>
                 </div>
                 <div>
                     <label class="text-xs text-[var(--text-secondary)] mb-1 block" data-i18n="userIdLabel">账号</label>
-                    <div class="flex gap-2"><div id="viewUser" class="vault-input flex-1 bg-[var(--bg-item)]"></div><button onclick="copyField('viewUser')" class="icon-btn"><i class="fas fa-copy"></i></button></div>
+                    <div class="flex gap-2">
+                        <div id="viewUser" class="vault-input flex-1 bg-[var(--bg-item)]"></div><button
+                            onclick="copyField('viewUser')" class="icon-btn"><i class="fas fa-copy"></i></button>
+                    </div>
                 </div>
                 <div>
                     <label class="text-xs text-[var(--text-secondary)] mb-1 block" data-i18n="secretLabel">密码</label>
                     <div class="flex gap-2">
-                        <div class="vault-input flex-1 bg-[var(--bg-item)] flex items-center"><span id="viewPass" class="flex-1 font-mono">••••••••</span><input type="hidden" id="viewPassValue"></div>
-                        <button onclick="toggleViewPass()" class="icon-btn" id="btnToggleViewPass"><i class="fas fa-eye"></i></button>
+                        <div class="vault-input flex-1 bg-[var(--bg-item)] flex items-center"><span id="viewPass"
+                                class="flex-1 font-mono">••••••••</span><input type="hidden" id="viewPassValue"></div>
+                        <button onclick="toggleViewPass()" class="icon-btn" id="btnToggleViewPass"><i
+                                class="fas fa-eye"></i></button>
                         <button onclick="copyViewPass()" class="icon-btn"><i class="fas fa-copy"></i></button>
                     </div>
                 </div>
@@ -266,8 +654,10 @@
                 </div>
             </div>
             <div class="flex gap-3 mt-6 pt-4 border-t border-[var(--border-main)]">
-                <button onclick="deleteFromView()" class="icon-btn text-red-500 border-red-200"><i class="fas fa-trash"></i></button>
-                <button onclick="editFromView()" class="vault-btn primary flex-1" data-i18n="editEntry"><i class="fas fa-edit"></i> 编辑</button>
+                <button onclick="deleteFromView()" class="icon-btn text-red-500 border-red-200"><i
+                        class="fas fa-trash"></i></button>
+                <button onclick="editFromView()" class="vault-btn primary flex-1" data-i18n="editEntry"><i
+                        class="fas fa-edit"></i> 编辑</button>
             </div>
         </div>
     </div>
@@ -281,7 +671,9 @@
             </div>
             <input type="hidden" id="itemId">
             <div class="space-y-4">
-                <div><label class="text-xs text-[var(--text-secondary)] mb-1 block" data-i18n="targetLabel">平台</label><input type="text" id="itemTitle" class="vault-input" placeholder="例如: Google"></div>
+                <div><label class="text-xs text-[var(--text-secondary)] mb-1 block"
+                        data-i18n="targetLabel">平台</label><input type="text" id="itemTitle" class="vault-input"
+                        placeholder="例如: Google"></div>
                 <div><label class="text-xs text-[var(--text-secondary)] mb-1 block" data-i18n="categoryLabel">分类</label>
                     <select id="itemCategory" class="vault-input">
                         <option value="other" data-i18n-option="catOther">其他</option>
@@ -293,20 +685,30 @@
                         <option value="server" data-i18n-option="catServer">服务器</option>
                     </select>
                 </div>
-                <div><label class="text-xs text-[var(--text-secondary)] mb-1 block" data-i18n="userIdLabel">账号</label><input type="text" id="itemUser" class="vault-input" placeholder="用户名/邮箱"></div>
+                <div><label class="text-xs text-[var(--text-secondary)] mb-1 block"
+                        data-i18n="userIdLabel">账号</label><input type="text" id="itemUser" class="vault-input"
+                        placeholder="用户名/邮箱"></div>
                 <div><label class="text-xs text-[var(--text-secondary)] mb-1 block" data-i18n="secretLabel">密码</label>
                     <div class="flex gap-2">
                         <input type="password" id="itemPass" class="vault-input flex-1" placeholder="••••••••">
-                        <button onclick="togglePwdVisibility('itemPass')" class="icon-btn"><i class="fas fa-eye"></i></button>
-                        <button onclick="generatePassword()" class="icon-btn" title="生成随机密码"><i class="fas fa-dice"></i></button>
+                        <button onclick="togglePwdVisibility('itemPass')" class="icon-btn"><i
+                                class="fas fa-eye"></i></button>
+                        <button onclick="generatePassword()" class="icon-btn" title="生成随机密码"><i
+                                class="fas fa-dice"></i></button>
                     </div>
                 </div>
-                <div><label class="text-xs text-[var(--text-secondary)] mb-1 block" data-i18n="metaLabel">备注</label><textarea id="itemNote" rows="2" class="vault-input resize-none" placeholder="可选备注"></textarea></div>
-                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="itemHidden" class="w-4 h-4 accent-[var(--text-accent)]"><span class="text-sm text-[var(--text-secondary)]" data-i18n="markAsHidden">标记为隐藏</span></label>
+                <div><label class="text-xs text-[var(--text-secondary)] mb-1 block"
+                        data-i18n="metaLabel">备注</label><textarea id="itemNote" rows="2" class="vault-input resize-none"
+                        placeholder="可选备注"></textarea></div>
+                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="itemHidden"
+                        class="w-4 h-4 accent-[var(--text-accent)]"><span class="text-sm text-[var(--text-secondary)]"
+                        data-i18n="markAsHidden">标记为隐藏</span></label>
             </div>
             <div class="flex gap-3 mt-6 pt-4 border-t border-[var(--border-main)]">
-                <button onclick="deleteItem()" id="btnDelete" class="hidden icon-btn text-red-500 border-red-200"><i class="fas fa-trash"></i></button>
-                <button onclick="saveItem()" class="vault-btn primary flex-1" data-i18n="saveData"><i class="fas fa-save"></i> 保存</button>
+                <button onclick="deleteItem()" id="btnDelete" class="hidden icon-btn text-red-500 border-red-200"><i
+                        class="fas fa-trash"></i></button>
+                <button onclick="saveItem()" class="vault-btn primary flex-1" data-i18n="saveData"><i
+                        class="fas fa-save"></i> 保存</button>
             </div>
         </div>
     </div>
@@ -315,7 +717,8 @@
     <div id="settingsModal" class="modal-overlay hidden">
         <div class="vault-panel w-full max-w-lg max-h-[90vh] flex flex-col overflow-hidden">
             <!-- 固定顶部标题栏 -->
-            <div class="flex justify-between items-center p-5 border-b border-[var(--border-main)] bg-[var(--bg-panel)] flex-shrink-0">
+            <div
+                class="flex justify-between items-center p-5 border-b border-[var(--border-main)] bg-[var(--bg-panel)] flex-shrink-0">
                 <h3 class="font-bold text-lg" data-i18n="secTitle">设置</h3>
                 <button onclick="closeSettings()" class="icon-btn"><i class="fas fa-times"></i></button>
             </div>
@@ -325,119 +728,207 @@
                     <!-- 本地恢复 -->
                     <div class="accordion-item" id="accordionLocalRecovery">
                         <div class="accordion-header" onclick="toggleAccordion(this)">
-                            <h4><span class="badge badge-green mr-2">1</span><span data-i18n="localRecovery">本地恢复</span><span class="badge badge-green ml-2" data-i18n="offlineTag">离线</span></h4>
+                            <h4><span class="badge badge-green mr-2">1</span><span
+                                    data-i18n="localRecovery">本地恢复</span><span class="badge badge-green ml-2"
+                                    data-i18n="offlineTag">离线</span></h4>
                             <div class="flex items-center gap-2">
-                                <span id="localRecoveryStatus" class="text-xs text-[var(--badge-green-text)] hidden"><i class="fas fa-check-circle"></i></span>
+                                <span id="localRecoveryStatus" class="text-xs text-[var(--badge-green-text)] hidden"><i
+                                        class="fas fa-check-circle"></i></span>
                                 <i class="fas fa-chevron-down accordion-icon"></i>
                             </div>
                         </div>
                         <div class="accordion-content">
                             <div class="accordion-body">
-                                <div class="tip-box mb-3"><p data-i18n="localRecoveryDesc">设置安全问题用于本地密码恢复。答案会用于加密您的主密码，因此请牢记答案。</p></div>
+                                <div class="tip-box mb-3">
+                                    <p data-i18n="localRecoveryDesc">设置安全问题用于本地密码恢复。答案会用于加密您的主密码，因此请牢记答案。</p>
+                                </div>
                                 <!-- 已设置状态 -->
                                 <div id="localRecoverySet" class="hidden">
-                                    <div class="vault-input bg-[var(--bg-item)] mb-3 p-3 border-l-4 border-[var(--badge-green-text)]">
+                                    <div
+                                        class="vault-input bg-[var(--bg-item)] mb-3 p-3 border-l-4 border-[var(--badge-green-text)]">
                                         <p class="text-xs text-[var(--text-muted)] mb-1">当前安全问题</p>
                                         <p id="currentQuestionDisplay" class="font-medium"></p>
                                     </div>
-                                    <button onclick="showEditQuestion()" class="vault-btn w-full"><i class="fas fa-edit"></i> <span data-i18n="editEntry">修改</span></button>
+                                    <button onclick="showEditQuestion()" class="vault-btn w-full"><i
+                                            class="fas fa-edit"></i> <span data-i18n="editEntry">修改</span></button>
                                 </div>
                                 <!-- 编辑/新建表单 -->
                                 <div id="localRecoveryForm" class="space-y-3">
-                                    <input type="text" id="configQuestion" class="vault-input" data-i18n-placeholder="secQuestionPlaceholder" placeholder="安全问题">
-                                    <input type="text" id="configAnswer" class="vault-input" data-i18n-placeholder="answerPlaceholder" placeholder="答案">
+                                    <input type="text" id="configQuestion" class="vault-input"
+                                        data-i18n-placeholder="secQuestionPlaceholder" placeholder="安全问题">
+                                    <input type="text" id="configAnswer" class="vault-input"
+                                        data-i18n-placeholder="answerPlaceholder" placeholder="答案">
                                     <div class="flex gap-2">
-                                        <button onclick="cancelEditQuestion()" id="btnCancelQuestion" class="vault-btn flex-1 hidden"><i class="fas fa-times"></i> <span>取消</span></button>
-                                        <button onclick="saveQuestion()" class="vault-btn flex-1" id="btnSaveQuestion" data-i18n="saveLocal">保存安全问题</button>
+                                        <button onclick="cancelEditQuestion()" id="btnCancelQuestion"
+                                            class="vault-btn flex-1 hidden"><i class="fas fa-times"></i>
+                                            <span>取消</span></button>
+                                        <button onclick="saveQuestion()" class="vault-btn flex-1" id="btnSaveQuestion"
+                                            data-i18n="saveLocal">保存安全问题</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- 服务器恢复 -->
                     <div class="accordion-item" id="accordionServerRecovery">
                         <div class="accordion-header" onclick="toggleAccordion(this)">
-                            <h4><span class="badge badge-blue mr-2">2</span><span data-i18n="serverRecovery">服务器恢复</span><span class="badge badge-blue ml-2" data-i18n="onlineTag">在线</span></h4>
+                            <h4><span class="badge badge-blue mr-2">2</span><span
+                                    data-i18n="serverRecovery">服务器恢复</span><span class="badge badge-blue ml-2"
+                                    data-i18n="onlineTag">在线</span></h4>
                             <div class="flex items-center gap-2">
-                                <span id="serverRecoveryStatus" class="text-xs text-[var(--badge-blue-text)] hidden"><i class="fas fa-check-circle"></i></span>
+                                <span id="serverRecoveryStatus" class="text-xs text-[var(--badge-blue-text)] hidden"><i
+                                        class="fas fa-check-circle"></i></span>
                                 <i class="fas fa-chevron-down accordion-icon"></i>
                             </div>
                         </div>
                         <div class="accordion-content">
                             <div class="accordion-body">
-                                <div class="tip-box mb-3"><p data-i18n="serverRecoveryDesc">注册邮箱后，如果同时忘记密码和安全问题答案，可以通过邮箱找回。</p></div>
+                                <div class="tip-box mb-3">
+                                    <p data-i18n="serverRecoveryDesc">注册邮箱后，如果同时忘记密码和安全问题答案，可以通过邮箱找回。</p>
+                                </div>
                                 <!-- 已设置状态 -->
                                 <div id="serverRecoverySet" class="hidden">
-                                    <div class="vault-input bg-[var(--bg-item)] mb-3 p-3 border-l-4 border-[var(--badge-blue-text)]">
+                                    <div
+                                        class="vault-input bg-[var(--bg-item)] mb-3 p-3 border-l-4 border-[var(--badge-blue-text)]">
                                         <p class="text-xs text-[var(--text-muted)] mb-1">已注册邮箱</p>
                                         <p id="currentEmailDisplay" class="font-medium"></p>
                                     </div>
-                                    <button onclick="showEditEmail()" class="vault-btn w-full"><i class="fas fa-edit"></i> <span data-i18n="editEntry">修改</span></button>
+                                    <button onclick="showEditEmail()" class="vault-btn w-full"><i
+                                            class="fas fa-edit"></i> <span data-i18n="editEntry">修改</span></button>
                                 </div>
                                 <!-- 编辑/新建表单 -->
                                 <div id="serverRecoveryForm" class="space-y-3">
-                                    <input type="email" id="configEmail" class="vault-input" data-i18n-placeholder="emailPlaceholder" placeholder="您的邮箱地址">
+                                    <input type="email" id="configEmail" class="vault-input"
+                                        data-i18n-placeholder="emailPlaceholder" placeholder="您的邮箱地址">
                                     <div class="flex gap-2">
-                                        <button onclick="cancelEditEmail()" id="btnCancelEmail" class="vault-btn flex-1 hidden"><i class="fas fa-times"></i> <span>取消</span></button>
-                                        <button onclick="saveEmail()" id="btnSaveEmail" class="vault-btn flex-1" data-i18n="connectRegister">连接并注册</button>
+                                        <button onclick="cancelEditEmail()" id="btnCancelEmail"
+                                            class="vault-btn flex-1 hidden"><i class="fas fa-times"></i>
+                                            <span>取消</span></button>
+                                        <button onclick="saveEmail()" id="btnSaveEmail" class="vault-btn flex-1"
+                                            data-i18n="connectRegister">连接并注册</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- 修改密码 -->
                     <div class="accordion-item" id="accordionChangePassword">
                         <div class="accordion-header" onclick="toggleAccordion(this)">
-                            <h4><span class="badge badge-green mr-2">3</span><span data-i18n="changePassword">修改密码</span></h4>
+                            <h4><span class="badge badge-green mr-2">3</span><span
+                                    data-i18n="changePassword">修改密码</span></h4>
                             <i class="fas fa-chevron-down accordion-icon"></i>
                         </div>
                         <div class="accordion-content">
                             <div class="accordion-body">
-                                <div class="tip-box mb-3"><p data-i18n="changePasswordDesc">修改主密码后，所有数据将使用新密码重新加密。</p></div>
+                                <div class="tip-box mb-3">
+                                    <p data-i18n="changePasswordDesc">修改主密码后，所有数据将使用新密码重新加密。</p>
+                                </div>
                                 <div class="space-y-3">
-                                    <input type="password" id="currentPassword" class="vault-input" data-i18n-placeholder="currentPasswordPlaceholder" placeholder="当前密码">
-                                    <input type="password" id="newPassword" class="vault-input" data-i18n-placeholder="newPasswordPlaceholder" placeholder="新密码">
-                                    <input type="password" id="confirmNewPassword" class="vault-input" data-i18n-placeholder="confirmNewPasswordPlaceholder" placeholder="确认新密码">
-                                    <button onclick="changePassword()" class="vault-btn w-full" data-i18n="updatePassword">更新密码</button>
+                                    <input type="password" id="currentPassword" class="vault-input"
+                                        data-i18n-placeholder="currentPasswordPlaceholder" placeholder="当前密码">
+                                    <input type="password" id="newPassword" class="vault-input"
+                                        data-i18n-placeholder="newPasswordPlaceholder" placeholder="新密码">
+                                    <input type="password" id="confirmNewPassword" class="vault-input"
+                                        data-i18n-placeholder="confirmNewPasswordPlaceholder" placeholder="确认新密码">
+                                    <button onclick="changePassword()" class="vault-btn w-full"
+                                        data-i18n="updatePassword">更新密码</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
+                    <!-- 自动备份 -->
+                    <div class="accordion-item" id="accordionAutoBackup">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <h4><span class="badge badge-blue mr-2">4</span><span data-i18n="autoBackup">自动备份</span>
+                            </h4>
+                            <i class="fas fa-chevron-down accordion-icon"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <div class="tip-box mb-3">
+                                    <p data-i18n="autoBackupDesc">定期自动备份数据到本地，防止数据丢失。</p>
+                                </div>
+                                <div class="space-y-3">
+                                    <div>
+                                        <label class="text-xs text-[var(--text-secondary)] mb-1 block"
+                                            data-i18n="backupFreq">备份频率</label>
+                                        <select id="backupFreqSelect" onchange="saveBackupFreq()" class="vault-input">
+                                            <option value="daily" data-i18n-option="backupDaily">每日</option>
+                                            <option value="weekly" data-i18n-option="backupWeekly">每周</option>
+                                            <option value="monthly" data-i18n-option="backupMonthly">每月</option>
+                                            <option value="manual" data-i18n-option="backupManual">仅手动</option>
+                                        </select>
+                                    </div>
+                                    <div class="vault-input bg-[var(--bg-item)] p-3">
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm text-[var(--text-secondary)]"
+                                                data-i18n="lastBackupTime">上次备份</span>
+                                            <span id="lastBackupDisplay" class="text-sm font-medium">-</span>
+                                        </div>
+                                    </div>
+                                    <button onclick="doAutoBackup()" class="vault-btn w-full">
+                                        <i class="fas fa-cloud-download-alt"></i> <span
+                                            data-i18n="backupNow">立即备份</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- 数据备份 -->
                     <div class="accordion-item" id="accordionDataBackup">
                         <div class="accordion-header" onclick="toggleAccordion(this)">
-                            <h4><span class="badge badge-blue mr-2">4</span><span data-i18n="dataBackup">数据备份</span></h4>
+                            <h4><span class="badge badge-blue mr-2">5</span><span data-i18n="dataBackup">数据备份</span>
+                            </h4>
                             <i class="fas fa-chevron-down accordion-icon"></i>
                         </div>
                         <div class="accordion-content">
                             <div class="accordion-body">
-                                <div class="tip-box mb-3"><p data-i18n="dataBackupDesc">导出的文件包含加密后的密码数据，可用于备份或迁移。</p></div>
+                                <div class="tip-box mb-3">
+                                    <p data-i18n="dataBackupDesc">导出的文件包含加密后的密码数据，可用于备份或迁移。</p>
+                                </div>
                                 <div class="space-y-3">
-                                    <button onclick="exportData()" class="vault-btn w-full"><i class="fas fa-download"></i> <span data-i18n="exportData">导出数据</span></button>
+                                    <button onclick="exportData()" class="vault-btn w-full"><i
+                                            class="fas fa-download"></i> <span
+                                            data-i18n="exportData">导出数据</span></button>
                                     <div class="flex items-center gap-4 text-sm">
-                                        <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="importMode" value="merge" checked class="accent-[var(--text-accent)]"><span data-i18n="importModeMerge">合并</span></label>
-                                        <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="importMode" value="replace" class="accent-[var(--text-accent)]"><span data-i18n="importModeReplace">替换</span></label>
+                                        <label class="flex items-center gap-2 cursor-pointer"><input type="radio"
+                                                name="importMode" value="merge" checked
+                                                class="accent-[var(--text-accent)]"><span
+                                                data-i18n="importModeMerge">合并</span></label>
+                                        <label class="flex items-center gap-2 cursor-pointer"><input type="radio"
+                                                name="importMode" value="replace"
+                                                class="accent-[var(--text-accent)]"><span
+                                                data-i18n="importModeReplace">替换</span></label>
                                     </div>
-                                    <input type="file" id="importFileInput" accept=".json" class="hidden" onchange="importData(event)">
-                                    <button onclick="document.getElementById('importFileInput').click()" class="vault-btn w-full"><i class="fas fa-upload"></i> <span data-i18n="importData">导入数据</span></button>
+                                    <input type="file" id="importFileInput" accept=".json" class="hidden"
+                                        onchange="importData(event)">
+                                    <button onclick="document.getElementById('importFileInput').click()"
+                                        class="vault-btn w-full"><i class="fas fa-upload"></i> <span
+                                            data-i18n="importData">导入数据</span></button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- 危险区域 -->
                     <div class="accordion-item" id="accordionDangerZone">
                         <div class="accordion-header" onclick="toggleAccordion(this)">
-                            <h4><span class="w-5 h-5 rounded bg-red-100 text-red-500 flex items-center justify-center text-xs mr-2">!</span><span class="text-red-500" data-i18n="dangerZone">危险区域</span></h4>
+                            <h4><span
+                                    class="w-5 h-5 rounded bg-red-100 text-red-500 flex items-center justify-center text-xs mr-2">!</span><span
+                                    class="text-red-500" data-i18n="dangerZone">危险区域</span></h4>
                             <i class="fas fa-chevron-down accordion-icon"></i>
                         </div>
                         <div class="accordion-content">
                             <div class="accordion-body">
-                                <div class="tip-box mb-3 border-red-300"><p class="text-red-500" data-i18n="dangerZoneDesc">此操作不可撤销，将永久删除所有保存的密码数据。</p></div>
-                                <button onclick="deleteAllData()" class="vault-btn w-full border-red-200 text-red-500 hover:bg-red-500 hover:text-white">
+                                <div class="tip-box mb-3 border-red-300">
+                                    <p class="text-red-500" data-i18n="dangerZoneDesc">此操作不可撤销，将永久删除所有保存的密码数据。</p>
+                                </div>
+                                <button onclick="deleteAllData()"
+                                    class="vault-btn w-full border-red-200 text-red-500 hover:bg-red-500 hover:text-white">
                                     <i class="fas fa-trash-alt"></i> <span data-i18n="deleteAllData">删除所有数据</span>
                                 </button>
                             </div>
@@ -452,57 +943,94 @@
     <div id="helpModal" class="modal-overlay hidden">
         <div class="vault-panel w-full max-w-lg max-h-[90vh] flex flex-col overflow-hidden">
             <!-- 固定顶部标题栏 -->
-            <div class="flex justify-between items-center p-5 border-b border-[var(--border-main)] bg-[var(--bg-panel)] flex-shrink-0">
+            <div
+                class="flex justify-between items-center p-5 border-b border-[var(--border-main)] bg-[var(--bg-panel)] flex-shrink-0">
                 <h3 class="font-bold text-lg" data-i18n="helpTitle">使用手册</h3>
                 <button onclick="closeHelp()" class="icon-btn"><i class="fas fa-times"></i></button>
             </div>
             <!-- 可滚动内容区 -->
             <div class="flex-1 overflow-y-auto scroll-area p-5">
-            
-            <!-- 可折叠手册 -->
-            <div class="accordion" id="helpAccordion">
-                <div class="accordion-item open">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">
-                        <h4><i class="fas fa-rocket text-[var(--text-accent)]"></i><span data-i18n="helpQuickStart">快速开始</span></h4>
-                        <i class="fas fa-chevron-down accordion-icon"></i>
+
+                <!-- 可折叠手册 -->
+                <div class="accordion" id="helpAccordion">
+                    <div class="accordion-item open">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <h4><i class="fas fa-rocket text-[var(--text-accent)]"></i><span
+                                    data-i18n="helpQuickStart">快速开始</span></h4>
+                            <i class="fas fa-chevron-down accordion-icon"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <div class="tip-box">
+                                    <p id="helpQuickStartText" class="whitespace-pre-line"></p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="accordion-content"><div class="accordion-body"><div class="tip-box"><p id="helpQuickStartText" class="whitespace-pre-line"></p></div></div></div>
-                </div>
-                <div class="accordion-item">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">
-                        <h4><i class="fas fa-shield-alt text-[var(--text-accent)]"></i><span data-i18n="helpSecurity">安全机制</span></h4>
-                        <i class="fas fa-chevron-down accordion-icon"></i>
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <h4><i class="fas fa-shield-alt text-[var(--text-accent)]"></i><span
+                                    data-i18n="helpSecurity">安全机制</span></h4>
+                            <i class="fas fa-chevron-down accordion-icon"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <div class="tip-box">
+                                    <p id="helpSecurityText" class="whitespace-pre-line"></p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="accordion-content"><div class="accordion-body"><div class="tip-box"><p id="helpSecurityText" class="whitespace-pre-line"></p></div></div></div>
-                </div>
-                <div class="accordion-item">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">
-                        <h4><i class="fas fa-life-ring text-[var(--text-accent)]"></i><span data-i18n="helpRecovery">密码恢复</span></h4>
-                        <i class="fas fa-chevron-down accordion-icon"></i>
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <h4><i class="fas fa-life-ring text-[var(--text-accent)]"></i><span
+                                    data-i18n="helpRecovery">密码恢复</span></h4>
+                            <i class="fas fa-chevron-down accordion-icon"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <div class="tip-box">
+                                    <p id="helpRecoveryText" class="whitespace-pre-line"></p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="accordion-content"><div class="accordion-body"><div class="tip-box"><p id="helpRecoveryText" class="whitespace-pre-line"></p></div></div></div>
-                </div>
-                <div class="accordion-item">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">
-                        <h4><i class="fas fa-lightbulb text-[var(--text-accent)]"></i><span data-i18n="helpTips">使用技巧</span></h4>
-                        <i class="fas fa-chevron-down accordion-icon"></i>
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <h4><i class="fas fa-lightbulb text-[var(--text-accent)]"></i><span
+                                    data-i18n="helpTips">使用技巧</span></h4>
+                            <i class="fas fa-chevron-down accordion-icon"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <div class="tip-box">
+                                    <p id="helpTipsText" class="whitespace-pre-line"></p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="accordion-content"><div class="accordion-body"><div class="tip-box"><p id="helpTipsText" class="whitespace-pre-line"></p></div></div></div>
-                </div>
-                <div class="accordion-item">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">
-                        <h4><i class="fas fa-question-circle text-[var(--text-accent)]"></i><span data-i18n="helpFAQ">常见问题</span></h4>
-                        <i class="fas fa-chevron-down accordion-icon"></i>
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <h4><i class="fas fa-question-circle text-[var(--text-accent)]"></i><span
+                                    data-i18n="helpFAQ">常见问题</span></h4>
+                            <i class="fas fa-chevron-down accordion-icon"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <div class="tip-box">
+                                    <p id="helpFAQText" class="whitespace-pre-line"></p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="accordion-content"><div class="accordion-body"><div class="tip-box"><p id="helpFAQText" class="whitespace-pre-line"></p></div></div></div>
                 </div>
-            </div>
-            
-            <div class="text-center text-xs text-[var(--text-muted)] pt-4 mt-4 border-t border-[var(--border-main)]">
-                <p><span data-i18n="appName">Forkeys</span> v2.0</p>
-                <p data-i18n="aboutCopyright">安全存储您的数字资产</p>
-            </div>
-            <button onclick="closeHelp()" class="vault-btn primary w-full mt-4" data-i18n="helpClose">我知道了</button>
+
+                <div
+                    class="text-center text-xs text-[var(--text-muted)] pt-4 mt-4 border-t border-[var(--border-main)]">
+                    <p><span data-i18n="appName">Forkeys</span> v2.0</p>
+                    <p data-i18n="aboutCopyright">安全存储您的数字资产</p>
+                </div>
+                <button onclick="closeHelp()" class="vault-btn primary w-full mt-4" data-i18n="helpClose">我知道了</button>
             </div>
         </div>
     </div>
@@ -518,11 +1046,14 @@
             <div class="vault-input bg-[var(--bg-item)] mb-4 p-3 border-l-4 border-[var(--border-highlight)]">
                 <p id="displayQuestion" class="font-medium">加载中...</p>
             </div>
-            <input type="text" id="inputAnswer" class="vault-input mb-4" data-i18n-placeholder="answerPlaceholder" placeholder="您的答案">
+            <input type="text" id="inputAnswer" class="vault-input mb-4" data-i18n-placeholder="answerPlaceholder"
+                placeholder="您的答案">
             <button onclick="doRecovery()" class="vault-btn primary w-full mb-4" data-i18n="verifyRecover">验证身份</button>
             <p id="recoveryMsg" class="text-red-500 text-sm text-center hidden" data-i18n="invalidAnswer">答案错误</p>
             <div class="text-center pt-4 border-t border-[var(--border-main)]">
-                <button onclick="showEmailRecovery()" class="text-sm text-[var(--text-secondary)] hover:text-[var(--text-accent)]" data-i18n="forgotQuestion">使用邮箱恢复</button>
+                <button onclick="showEmailRecovery()"
+                    class="text-sm text-[var(--text-secondary)] hover:text-[var(--text-accent)]"
+                    data-i18n="forgotQuestion">使用邮箱恢复</button>
             </div>
         </div>
     </div>
@@ -534,9 +1065,13 @@
                 <h3 class="font-bold text-lg" data-i18n="manualProtocol">邮箱恢复</h3>
                 <button onclick="closeEmailRecovery()" class="icon-btn"><i class="fas fa-times"></i></button>
             </div>
-            <div class="tip-box mb-4"><p data-i18n="protocolDescNew">输入注册邮箱，服务器会将安全问题和答案发送到该邮箱。</p></div>
-            <input type="email" id="recoveryEmailInput" class="vault-input mb-4" data-i18n-placeholder="emailPlaceholder" placeholder="注册邮箱">
-            <button onclick="requestRecoveryEmail()" id="btnRequestEmail" class="vault-btn primary w-full mb-4"><i class="fas fa-paper-plane"></i> <span data-i18n="requestQuestion">发送请求</span></button>
+            <div class="tip-box mb-4">
+                <p data-i18n="protocolDescNew">输入注册邮箱，服务器会将安全问题和答案发送到该邮箱。</p>
+            </div>
+            <input type="email" id="recoveryEmailInput" class="vault-input mb-4"
+                data-i18n-placeholder="emailPlaceholder" placeholder="注册邮箱">
+            <button onclick="requestRecoveryEmail()" id="btnRequestEmail" class="vault-btn primary w-full mb-4"><i
+                    class="fas fa-paper-plane"></i> <span data-i18n="requestQuestion">发送请求</span></button>
             <button onclick="closeEmailRecovery()" class="vault-btn w-full" data-i18n="backToRecovery">返回</button>
         </div>
     </div>
@@ -549,10 +1084,48 @@
         </div>
     </div>
 
+    <!-- 备份提醒弹窗 -->
+    <div id="backupReminderModal" class="modal-overlay hidden">
+        <div class="vault-panel p-5 w-full max-w-md">
+            <div class="text-center mb-4">
+                <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-[var(--bg-input)] flex items-center justify-center">
+                    <i class="fas fa-cloud-download-alt text-2xl text-[var(--text-accent)]"></i>
+                </div>
+                <h3 class="font-bold text-lg" data-i18n="backupReminderTitle">数据备份提醒</h3>
+            </div>
+            <div class="tip-box mb-4">
+                <p class="text-sm" data-i18n="backupReminderDesc">距离上次备份已过去较长时间，建议立即备份以防数据丢失。</p>
+            </div>
+            <div class="vault-input bg-[var(--bg-item)] p-3 mb-4 text-center">
+                <span class="text-sm text-[var(--text-secondary)]" data-i18n="lastBackupTime">上次备份</span>
+                <span id="reminderLastBackup" class="text-sm font-medium ml-2">-</span>
+            </div>
+            <div class="space-y-2">
+                <button onclick="doAutoBackupFromReminder()" class="vault-btn primary w-full">
+                    <i class="fas fa-cloud-download-alt"></i> <span data-i18n="backupNow">立即备份</span>
+                </button>
+                <button onclick="closeBackupReminder()" class="vault-btn w-full" data-i18n="backupLater">稍后提醒</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // ===== 配置 =====
         const API_BASE_URL = '';
-        const KEYS = { DATA: 'vault_data_v3', VERIFIER: 'vault_verifier_v3', RECOVERY: 'vault_recovery_v3', QUESTION: 'vault_question_v3', EMAIL: 'vault_email_v3', CREATED: 'vault_created_at', THEME: 'vault_theme', LANG: 'vault_lang' };
+        const KEYS = {
+            DATA: 'vault_data_v3',
+            VERIFIER: 'vault_verifier_v3',
+            RECOVERY: 'vault_recovery_v3',
+            QUESTION: 'vault_question_v3',
+            EMAIL: 'vault_email_v3',
+            CREATED: 'vault_created_at',
+            THEME: 'vault_theme',
+            LANG: 'vault_lang',
+            // 新增：备份配置
+            BACKUP_FREQ: 'vault_backup_freq',      // 备份频率: 'daily'|'weekly'|'monthly'|'manual'
+            LAST_BACKUP: 'vault_last_backup',       // 上次备份时间戳
+            MANDATORY_DONE: 'vault_mandatory_done'  // 首次强制设置是否完成
+        };
 
         // ===== 状态 =====
         let currentLang = localStorage.getItem(KEYS.LANG) || 'zh';
@@ -595,7 +1168,7 @@
         function copyToClipboard(text) { navigator.clipboard?.writeText(text).then(() => showToast(t('copied'))).catch(() => { const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); showToast(t('copied')); }); }
         function generatePassword() { const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*'; let pass = ''; for (let i = 0; i < 16; i++) pass += chars[Math.floor(Math.random() * chars.length)]; $('itemPass').value = pass; $('itemPass').type = 'text'; }
         function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text || ''; return div.innerHTML; }
-        
+
         // 折叠面板
         function toggleAccordion(header) {
             const item = header.parentElement;
@@ -611,7 +1184,12 @@
             localStorage.setItem(KEYS.VERIFIER, CryptoJS.AES.encrypt("VERIFIED_OK", p1).toString());
             localStorage.setItem(KEYS.CREATED, Date.now().toString());
             localStorage.setItem(KEYS.DATA, '');
-            masterKey = p1; hide($('setupScreen')); enterApp(); showToast(t('dataSaved'));
+            localStorage.setItem(KEYS.BACKUP_FREQ, 'weekly'); // 默认每周备份
+            masterKey = p1;
+            hide($('setupScreen'));
+            // 跳转到强制设置页面
+            showMandatorySetup();
+            showToast(t('dataSaved'));
         }
 
         function unlockVault() {
@@ -619,24 +1197,153 @@
             // 外圈旋转动画
             const ring = $('outerRing');
             if (ring) ring.classList.add('spin');
-            
+
             setTimeout(() => {
                 try {
                     if (CryptoJS.AES.decrypt(localStorage.getItem(KEYS.VERIFIER), pwd).toString(CryptoJS.enc.Utf8) === "VERIFIED_OK") {
-                        masterKey = pwd; loadData(); hide($('loginScreen')); enterApp();
+                        masterKey = pwd; loadData(); hide($('loginScreen'));
+                        // 检查是否需要强制设置
+                        if (!localStorage.getItem(KEYS.MANDATORY_DONE)) {
+                            showMandatorySetup();
+                        } else {
+                            enterApp();
+                        }
                     } else throw new Error();
-                } catch { 
-                    $('loginMsg').classList.remove('opacity-0'); 
+                } catch {
+                    $('loginMsg').classList.remove('opacity-0');
                     setTimeout(() => $('loginMsg').classList.add('opacity-0'), 2000);
                 }
                 if (ring) ring.classList.remove('spin');
             }, 600);
         }
 
-        function lockVault() { masterKey = ''; vaultData = []; ['appScreen', 'settingsModal', 'itemModal', 'viewModal', 'helpModal'].forEach(id => hide($(id))); hide($('topBar')); show($('loginScreen')); $('masterPassword').value = ''; }
-        function enterApp() { show($('topBar')); show($('appScreen')); renderItems(); }
+        function lockVault() { masterKey = ''; vaultData = [];['appScreen', 'settingsModal', 'itemModal', 'viewModal', 'helpModal', 'mandatorySetupScreen', 'backupReminderModal'].forEach(id => hide($(id))); hide($('topBar')); show($('loginScreen')); $('masterPassword').value = ''; }
+        function enterApp() {
+            show($('topBar'));
+            show($('appScreen'));
+            renderItems();
+            // 检查是否需要备份提醒
+            setTimeout(() => checkBackupReminder(), 1000);
+        }
         function loadData() { const enc = localStorage.getItem(KEYS.DATA); if (enc) try { vaultData = JSON.parse(CryptoJS.AES.decrypt(enc, masterKey).toString(CryptoJS.enc.Utf8)) || []; } catch { vaultData = []; } }
         function saveVault() { if (!masterKey) return lockVault(); localStorage.setItem(KEYS.DATA, CryptoJS.AES.encrypt(JSON.stringify(vaultData), masterKey).toString()); }
+
+        // ===== 强制设置 =====
+        function showMandatorySetup() {
+            // 清空输入
+            $('mandatoryQuestion').value = '';
+            $('mandatoryAnswer').value = '';
+            $('mandatoryEmail').value = '';
+            updateUI();
+            show($('mandatorySetupScreen'));
+        }
+
+        function completeMandatorySetup() {
+            const question = $('mandatoryQuestion').value.trim();
+            const answer = $('mandatoryAnswer').value.trim();
+            const email = $('mandatoryEmail').value.trim();
+
+            // 验证所有字段都已填写
+            if (!question || !answer) {
+                return showToast(t('passNull'), true);
+            }
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                return showToast(t('emailInvalid'), true);
+            }
+
+            // 保存安全问题
+            localStorage.setItem(KEYS.QUESTION, question);
+            localStorage.setItem(KEYS.RECOVERY, CryptoJS.AES.encrypt(masterKey, answer.toUpperCase().replace(/\s+/g, '')).toString());
+            localStorage.setItem(KEYS.EMAIL, email);
+            localStorage.setItem(KEYS.MANDATORY_DONE, 'true');
+
+            // 同步到服务器
+            fetch(`${API_BASE_URL}/api/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, question, answer })
+            }).catch(() => { });
+
+            hide($('mandatorySetupScreen'));
+            enterApp();
+            showToast(t('dataSaved'));
+        }
+
+        // ===== 自动备份 =====
+        function checkBackupReminder() {
+            const freq = localStorage.getItem(KEYS.BACKUP_FREQ) || 'weekly';
+            if (freq === 'manual') return;
+
+            const lastBackup = parseInt(localStorage.getItem(KEYS.LAST_BACKUP) || '0');
+            const now = Date.now();
+            const intervals = {
+                daily: 24 * 60 * 60 * 1000,       // 1天
+                weekly: 7 * 24 * 60 * 60 * 1000,  // 7天
+                monthly: 30 * 24 * 60 * 60 * 1000 // 30天
+            };
+
+            if ((now - lastBackup) > intervals[freq]) {
+                showBackupReminder(lastBackup);
+            }
+        }
+
+        function showBackupReminder(lastBackup) {
+            const display = $('reminderLastBackup');
+            if (lastBackup === 0) {
+                display.textContent = t('neverBackup');
+            } else {
+                const days = Math.floor((Date.now() - lastBackup) / (24 * 60 * 60 * 1000));
+                display.textContent = `${days} ${t('daysAgo')}`;
+            }
+            updateUI();
+            show($('backupReminderModal'));
+        }
+
+        function closeBackupReminder() {
+            hide($('backupReminderModal'));
+        }
+
+        function doAutoBackup() {
+            if (!masterKey) return;
+            const blob = new Blob([JSON.stringify({
+                version: "1.0",
+                timestamp: new Date().toISOString(),
+                verifier: localStorage.getItem(KEYS.VERIFIER),
+                data: localStorage.getItem(KEYS.DATA)
+            }, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `forkeys_auto_backup_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+
+            // 记录备份时间
+            localStorage.setItem(KEYS.LAST_BACKUP, Date.now().toString());
+            updateLastBackupDisplay();
+            showToast(t('exportSuccess'));
+        }
+
+        function doAutoBackupFromReminder() {
+            doAutoBackup();
+            closeBackupReminder();
+        }
+
+        function saveBackupFreq() {
+            const freq = $('backupFreqSelect').value;
+            localStorage.setItem(KEYS.BACKUP_FREQ, freq);
+            showToast(t('dataSaved'));
+        }
+
+        function updateLastBackupDisplay() {
+            const display = $('lastBackupDisplay');
+            if (!display) return;
+            const lastBackup = parseInt(localStorage.getItem(KEYS.LAST_BACKUP) || '0');
+            if (lastBackup === 0) {
+                display.textContent = t('neverBackup');
+            } else {
+                const date = new Date(lastBackup);
+                display.textContent = date.toLocaleDateString();
+            }
+        }
 
         // ===== 列表 =====
         const catIcons = { social: 'fa-users', email: 'fa-envelope', finance: 'fa-coins', shopping: 'fa-shopping-cart', work: 'fa-briefcase', server: 'fa-server', other: 'fa-folder' };
@@ -673,18 +1380,24 @@
         function deleteFromView() { if (!confirm(t('confirmDelete'))) return; vaultData = vaultData.filter(i => i.id !== $('viewItemId').value); saveVault(); renderItems(); closeViewModal(); }
 
         // ===== 设置 =====
-        function openSettings() { 
+        function openSettings() {
             const storedQuestion = localStorage.getItem(KEYS.QUESTION) || '';
             const storedEmail = localStorage.getItem(KEYS.EMAIL) || '';
-            
+
             // 清空输入
             $('configQuestion').value = storedQuestion;
             $('configEmail').value = storedEmail;
-            $('configAnswer').value = ''; 
-            $('currentPassword').value = ''; 
-            $('newPassword').value = ''; 
+            $('configAnswer').value = '';
+            $('currentPassword').value = '';
+            $('newPassword').value = '';
             $('confirmNewPassword').value = '';
-            
+
+            // 加载备份频率设置
+            const backupFreq = localStorage.getItem(KEYS.BACKUP_FREQ) || 'weekly';
+            const backupFreqSelect = $('backupFreqSelect');
+            if (backupFreqSelect) backupFreqSelect.value = backupFreq;
+            updateLastBackupDisplay();
+
             // 安全问题状态
             if (storedQuestion) {
                 $('currentQuestionDisplay').textContent = storedQuestion;
@@ -698,7 +1411,7 @@
                 hide($('localRecoveryStatus'));
                 hide($('btnCancelQuestion'));
             }
-            
+
             // 邮箱状态
             if (storedEmail) {
                 $('currentEmailDisplay').textContent = storedEmail;
@@ -712,14 +1425,14 @@
                 hide($('serverRecoveryStatus'));
                 hide($('btnCancelEmail'));
             }
-            
+
             // 默认全部折叠
             document.querySelectorAll('#settingsAccordion .accordion-item').forEach(item => item.classList.remove('open'));
-            
-            show($('settingsModal')); 
+
+            show($('settingsModal'));
         }
         function closeSettings() { hide($('settingsModal')); }
-        
+
         // 编辑安全问题
         function showEditQuestion() {
             hide($('localRecoverySet'));
@@ -736,7 +1449,7 @@
             }
             hide($('btnCancelQuestion'));
         }
-        
+
         // 编辑邮箱
         function showEditEmail() {
             hide($('serverRecoverySet'));
@@ -752,56 +1465,71 @@
             }
             hide($('btnCancelEmail'));
         }
-        
+
         function saveQuestion() {
-            const q = $('configQuestion').value.trim(), a = $('configAnswer').value.trim(); 
-            if (!q || !a) return showToast(t('passNull'), true); 
+            const q = $('configQuestion').value.trim(), a = $('configAnswer').value.trim();
+            if (!q || !a) return showToast(t('passNull'), true);
             if (!masterKey) return;
-            localStorage.setItem(KEYS.QUESTION, q); 
+            localStorage.setItem(KEYS.QUESTION, q);
             localStorage.setItem(KEYS.RECOVERY, CryptoJS.AES.encrypt(masterKey, a.toUpperCase().replace(/\s+/g, '')).toString());
-            showToast(t('questionSaved')); 
-            
+            showToast(t('questionSaved'));
+
             // 更新UI状态
             $('currentQuestionDisplay').textContent = q;
             show($('localRecoverySet'));
             hide($('localRecoveryForm'));
             show($('localRecoveryStatus'));
             hide($('btnCancelQuestion'));
-            
-            const email = localStorage.getItem(KEYS.EMAIL); 
+
+            const email = localStorage.getItem(KEYS.EMAIL);
             if (email) syncToServer(email, q, a);
         }
         function saveEmail() {
-            const email = $('configEmail').value.trim(), q = localStorage.getItem(KEYS.QUESTION) || $('configQuestion').value.trim(), a = $('configAnswer').value.trim();
-            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showToast(t('emailInvalid'), true); 
-            if (!q || !a) return showToast(t('passNull'), true);
+            const email = $('configEmail').value.trim();
+            const storedQuestion = localStorage.getItem(KEYS.QUESTION);
+
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showToast(t('emailInvalid'), true);
+
+            // 如果已经设置过安全问题，则只更新邮箱（不需要重新输入答案）
+            // 如果是首次设置，需要同时配置安全问题
+            if (!storedQuestion) {
+                const q = $('configQuestion').value.trim();
+                const a = $('configAnswer').value.trim();
+                if (!q || !a) return showToast(t('bothRequired'), true);
+            }
+
             const btn = $('btnSaveEmail'); btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+            // 获取现有的安全问题（用于服务器同步）
+            const q = storedQuestion || $('configQuestion').value.trim();
+            const a = $('configAnswer').value.trim() || '';
+
             fetch(`${API_BASE_URL}/api/register`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, question: q, answer: a }) })
-            .then(r => r.json()).then(d => { 
-                if (d.status === 'success') { 
-                    localStorage.setItem(KEYS.EMAIL, email); 
-                    showToast(t('dataSaved'));
-                    // 更新UI状态
+                .then(r => r.json()).then(d => {
+                    if (d.status === 'success') {
+                        localStorage.setItem(KEYS.EMAIL, email);
+                        showToast(t('dataSaved'));
+                        // 更新UI状态
+                        $('currentEmailDisplay').textContent = email;
+                        show($('serverRecoverySet'));
+                        hide($('serverRecoveryForm'));
+                        show($('serverRecoveryStatus'));
+                        hide($('btnCancelEmail'));
+                    } else showToast(d.message || t('serverError'), true);
+                })
+                .catch(() => {
+                    // 即使服务器失败也更新本地
+                    localStorage.setItem(KEYS.EMAIL, email);
                     $('currentEmailDisplay').textContent = email;
                     show($('serverRecoverySet'));
                     hide($('serverRecoveryForm'));
                     show($('serverRecoveryStatus'));
                     hide($('btnCancelEmail'));
-                } else showToast(d.message || t('serverError'), true); 
-            })
-            .catch(() => { 
-                localStorage.setItem(KEYS.EMAIL, email); 
-                // 即使服务器失败也更新本地UI
-                $('currentEmailDisplay').textContent = email;
-                show($('serverRecoverySet'));
-                hide($('serverRecoveryForm'));
-                show($('serverRecoveryStatus'));
-                hide($('btnCancelEmail'));
-                showToast(t('serverError'), true); 
-            })
-            .finally(() => { btn.disabled = false; btn.innerHTML = `<span data-i18n="connectRegister">${t('connectRegister')}</span>`; });
+                    showToast(t('serverError'), true);
+                })
+                .finally(() => { btn.disabled = false; btn.innerHTML = `<span data-i18n="connectRegister">${t('connectRegister')}</span>`; });
         }
-        function syncToServer(email, q, a) { fetch(`${API_BASE_URL}/api/register`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, question: q, answer: a }) }).catch(() => {}); }
+        function syncToServer(email, q, a) { fetch(`${API_BASE_URL}/api/register`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, question: q, answer: a }) }).catch(() => { }); }
         function changePassword() {
             const curr = $('currentPassword').value, newP = $('newPassword').value, conf = $('confirmNewPassword').value;
             if (!curr || curr !== masterKey) return showToast(t('currentPasswordWrong'), true); if (!newP || newP.length < 4) return showToast(t('passShort'), true); if (newP !== conf) return showToast(t('passMismatch'), true);
@@ -811,13 +1539,15 @@
         function exportData() { if (!masterKey) return; const blob = new Blob([JSON.stringify({ version: "1.0", timestamp: new Date().toISOString(), verifier: localStorage.getItem(KEYS.VERIFIER), data: localStorage.getItem(KEYS.DATA) }, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `forkeys_backup_${new Date().toISOString().split('T')[0]}.json`; a.click(); showToast(t('exportSuccess')); }
         function importData(e) {
             const file = e.target.files[0]; if (!file) return;
-            const reader = new FileReader(); reader.onload = function(evt) {
-                try { const data = JSON.parse(evt.target.result); if (!data.version || !data.verifier) throw new Error(); const pwd = prompt(t('enterPasscode')); if (!pwd) return;
-                if (CryptoJS.AES.decrypt(data.verifier, pwd).toString(CryptoJS.enc.Utf8) !== "VERIFIED_OK") return showToast(t('accessDenied'), true);
-                let items = []; if (data.data) items = JSON.parse(CryptoJS.AES.decrypt(data.data, pwd).toString(CryptoJS.enc.Utf8)) || [];
-                const mode = document.querySelector('input[name="importMode"]:checked')?.value || 'merge';
-                if (mode === 'merge') { const ids = new Set(vaultData.map(i => i.id)); items.forEach(i => { if (!ids.has(i.id)) vaultData.push(i); }); } else { vaultData = items; if (!masterKey) { masterKey = pwd; localStorage.setItem(KEYS.VERIFIER, data.verifier); } }
-                saveVault(); renderItems(); showToast(t('importSuccess')); } catch { showToast(t('serverError'), true); }
+            const reader = new FileReader(); reader.onload = function (evt) {
+                try {
+                    const data = JSON.parse(evt.target.result); if (!data.version || !data.verifier) throw new Error(); const pwd = prompt(t('enterPasscode')); if (!pwd) return;
+                    if (CryptoJS.AES.decrypt(data.verifier, pwd).toString(CryptoJS.enc.Utf8) !== "VERIFIED_OK") return showToast(t('accessDenied'), true);
+                    let items = []; if (data.data) items = JSON.parse(CryptoJS.AES.decrypt(data.data, pwd).toString(CryptoJS.enc.Utf8)) || [];
+                    const mode = document.querySelector('input[name="importMode"]:checked')?.value || 'merge';
+                    if (mode === 'merge') { const ids = new Set(vaultData.map(i => i.id)); items.forEach(i => { if (!ids.has(i.id)) vaultData.push(i); }); } else { vaultData = items; if (!masterKey) { masterKey = pwd; localStorage.setItem(KEYS.VERIFIER, data.verifier); } }
+                    saveVault(); renderItems(); showToast(t('importSuccess'));
+                } catch { showToast(t('serverError'), true); }
             }; reader.readAsText(file); e.target.value = '';
         }
         function deleteAllData() { const input = prompt(t('deleteAllConfirm')); if (input?.toUpperCase() !== 'DELETE') return; vaultData = []; saveVault(); renderItems(); closeSettings(); showToast(t('dataSaved')); }
@@ -832,8 +1562,8 @@
             const email = $('recoveryEmailInput').value.trim(); if (!email) return showToast(t('emailInvalid'), true);
             const btn = $('btnRequestEmail'); btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
             fetch(`${API_BASE_URL}/api/send_recovery_email`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) })
-            .then(r => r.json()).then(d => { if (d.status === 'success') { showToast(t('emailSent')); closeEmailRecovery(); } else showToast(d.message || t('serverError'), true); })
-            .catch(() => showToast(t('serverError'), true)).finally(() => { btn.disabled = false; btn.innerHTML = `<i class="fas fa-paper-plane"></i> <span>${t('requestQuestion')}</span>`; });
+                .then(r => r.json()).then(d => { if (d.status === 'success') { showToast(t('emailSent')); closeEmailRecovery(); } else showToast(d.message || t('serverError'), true); })
+                .catch(() => showToast(t('serverError'), true)).finally(() => { btn.disabled = false; btn.innerHTML = `<i class="fas fa-paper-plane"></i> <span>${t('requestQuestion')}</span>`; });
         }
 
         // ===== 帮助 =====
@@ -849,7 +1579,8 @@
         });
 
         // PWA
-        if ('serviceWorker' in navigator) navigator.serviceWorker.register('/service-worker.js').catch(() => {});
+        if ('serviceWorker' in navigator) navigator.serviceWorker.register('/service-worker.js').catch(() => { });
     </script>
 </body>
+
 </html>
