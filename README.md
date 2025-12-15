@@ -94,7 +94,11 @@ cd forkeys
 # 2. 安装依赖
 pip install -r requirements.txt
 
-# 3. 启动服务
+# 3. 配置环境变量
+cp .env.example .env
+# 编辑 .env 文件，填写您的 SMTP 配置
+
+# 4. 启动服务
 python server.py
 ```
 

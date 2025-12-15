@@ -16,15 +16,21 @@ from email.header import Header
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 from cryptography.fernet import Fernet
+from dotenv import load_dotenv
+
+# 加载环境变量
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
 # ==========================================
-# 📂 基础配置
+# 📂 基础配置 (从环境变量读取)
 # ==========================================
 DB_PATH = 'vault_server.db'
 SERVER_KEY_FILE = 'server_secret.key'
+SERVER_HOST = os.getenv('SERVER_HOST', '127.0.0.1')
+SERVER_PORT = int(os.getenv('SERVER_PORT', '59999'))
 
 # ==========================================
 # 🔐 服务器端加密配置
@@ -61,20 +67,13 @@ def decrypt_data(ciphertext):
         return ciphertext  # 兼容旧的未加密数据
 
 # ==========================================
-# 📧 腾讯云 SES 邮件配置
+# 📧 SMTP 邮件配置 (从环境变量读取)
 # ==========================================
 SMTP_CONFIG = {
-    # 腾讯云 SES SMTP 服务器
-    "SMTP_SERVER": "smtp.qcloudmail.com",
-    
-    # 使用 465 端口 (SSL加密)
-    "SMTP_PORT": 465,
-    
-    # 发件邮箱地址
-    "SENDER_EMAIL": "YOUREMAIL@YOURDOMAIN.COM",
-    
-    # SMTP 密码
-    "SENDER_PASSWORD": "YOURPASSWORD"
+    "SMTP_SERVER": os.getenv('SMTP_SERVER', 'smtp.qcloudmail.com'),
+    "SMTP_PORT": int(os.getenv('SMTP_PORT', '465')),
+    "SENDER_EMAIL": os.getenv('SMTP_SENDER_EMAIL', ''),
+    "SENDER_PASSWORD": os.getenv('SMTP_SENDER_PASSWORD', '')
 }
 # ==========================================
 
@@ -421,8 +420,17 @@ def server_status():
         "server": "CYBER VAULT",
         "version": "2.0",
         "encryption": "Fernet (AES-128-CBC)",
-         "address": "forkeys.ykers.top"
+        "address": f"{SERVER_HOST}:{SERVER_PORT}"
     })
+
+@app.route('/api/config', methods=['GET'])
+def get_frontend_config():
+    """获取前端配置（非敏感信息）"""
+    return jsonify({
+        "api_base_url": os.getenv('API_BASE_URL', ''),
+        "version": "2.0"
+    })
+
 
 # ==========================================
 # 🚀 启动服务器
@@ -431,10 +439,11 @@ if __name__ == '__main__':
     print("=" * 60)
     print("🔐 CYBER VAULT Server v2.0")
     print("=" * 60)
-    print(f"[CONFIG] 服务器地址: http://212.50.244.123:59999")
+    print(f"[CONFIG] 服务器地址: http://{SERVER_HOST}:{SERVER_PORT}")
     print(f"[CONFIG] 数据库文件: {DB_PATH}")
     print(f"[CONFIG] 加密密钥文件: {SERVER_KEY_FILE}")
     print(f"[CONFIG] 邮件服务器: {SMTP_CONFIG['SMTP_SERVER']}:{SMTP_CONFIG['SMTP_PORT']}")
+    print(f"[CONFIG] 发件邮箱: {SMTP_CONFIG['SENDER_EMAIL'] or '(未配置)'}")
     print("=" * 60)
     print("[INFO] 可用端点:")
     print("  - GET  /              主应用页面")
@@ -445,4 +454,5 @@ if __name__ == '__main__':
     print("=" * 60)
     
     # 启动服务器
-    app.run(host='127.0.0.1', port=59999, debug=False)
+    app.run(host=SERVER_HOST, port=SERVER_PORT, debug=False)
+
